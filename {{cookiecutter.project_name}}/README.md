@@ -17,6 +17,7 @@ docker-compose up -d
 | Apistar | 8000 |
 | Jupyter | 8888 |
 | Minio | 9000 |
+| Pgadmin | 80 |
 | Portainer | 9090 |
 | Postgres | 5432 |
 | Superset | 8088 |
