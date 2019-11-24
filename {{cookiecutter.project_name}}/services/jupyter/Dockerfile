@@ -1,4 +1,4 @@
-FROM jupyter/scipy-notebook
+FROM jupyter/all-spark-notebook
 
 USER root
 
@@ -6,4 +6,5 @@ RUN pip install --proxy=${http_proxy}\
     psycopg2-binary\
     minio
 
-USER jovyan
+RUN pip install jupyter_contrib_nbextensions\
+    && jupyter contrib nbextension install 

@@ -16,6 +16,7 @@ services:
       - ./shared/notebooks/:/home/jovyan/work/notebooks
       - ./shared/dags/:/home/jovyan/work/dags
       - ./services/apistar/api/:/home/jovyan/work/api
+      - ./services/src:/home/jovyan/work/src
     ports:
       - 8888:8888
     entrypoint: sh -c 'start-notebook.sh --NotebookApp.token=$$JUPYTER_PASSWORD'
@@ -24,7 +25,7 @@ services:
   superset:
     container_name: "{{cookiecutter.project_name}}_superset"
     restart: "always"
-    image: tylerfowler/superset:0.24
+    image: tylerfowler/superset:0.28
     depends_on:
         - postgres
     env_file:
@@ -49,11 +50,29 @@ services:
     ports:
       - 5432:5432
 
+  # Administrate the database 
+  pgadmin:
+    container_name: "ds_stack_test_pgadmin"
+    restart: "always"
+    image: dpage/pgadmin4
+    depends_on:
+        - postgres
+    env_file:
+      - ./config/postgres.env
+      - ./config/superset_database.env
+      - ./config/airflow_database.env
+      - ./config/shared_database.env
+      - ./config/pgadmin.env
+    volumes:
+     - pgadmin_volume:/root/.pgadmin
+    ports:
+     - 80:80 
+
   # Scheduling
   airflow:
     container_name: "{{cookiecutter.project_name}}_airflow"
     restart: "always"
-    image: puckel/docker-airflow:1.9.0-2
+    image: puckel/docker-airflow:1.10.6-1
     depends_on:
       - postgres
     env_file:
@@ -108,5 +127,6 @@ services:
 # Volumes to persist data
 volumes:
   postgres_volume:
+  pgadmin_volume:
   minio_volume:
   portainer_volume:
