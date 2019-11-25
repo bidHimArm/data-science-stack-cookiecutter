@@ -20,3 +20,5 @@ The following table provides an overview about parameter, that are queried by co
 | **superset_admin_password** | *Password for superset admin user* | Superset |
 | **minio_access_key** | *Access key for Minio store* | Airflow<br>Apistar<br>Jupyter<br>Minio |
 | **minio_secret_key** | *Secret key for Minio store* | Airflow<br>Apistar<br>Jupyter<br>Minio |
+| **pgadmin_default_email** | *Default user email for PgAdmin4* | Postgres |
+| **pgadmin_default_password** | *Default password for PgAdmin4* | Postgres |
