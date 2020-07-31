@@ -5,7 +5,10 @@ Cookiecutter to launch an awesome Data Science toolstack in Docker.
 [![asciicast](https://asciinema.org/a/CcZ9duIdP0pBfZWxw5Nt1tFVZ.png)](https://asciinema.org/a/CcZ9duIdP0pBfZWxw5Nt1tFVZ)
 
 # Overall Architecture
+## Stack architecture
 ![stack architecture](./architecture_1.png)
+
+## Fucntional architecture
 ![fucntional architecture](./architecture_2.png)
 
 # Used Variables
