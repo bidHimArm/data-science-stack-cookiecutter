@@ -3,10 +3,11 @@
     "jupyter_password": "changeme1234",
     "postgres_db_password": "changeme1234",
     "shared_db_password": "changeme1234",
-    "superset_db_password": "changeme1234",
-    "superset_admin_password": "changeme1234",
+    "grafana_db_password": "changeme1234",
+    "grafana_admin_password": "changeme1234",
     "minio_access_key": "changeme1234",
     "minio_secret_key": "changeme1234",
     "pgadmin_default_email": "changeme1234@postgre.com",
-    "pgadmin_default_password": "changeme1234"
+    "pgadmin_default_password": "changeme1234",
+    "mlflow_db_password": "changeme1234"
 }
