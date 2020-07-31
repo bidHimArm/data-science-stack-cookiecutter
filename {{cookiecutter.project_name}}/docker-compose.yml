@@ -2,7 +2,7 @@ version: "3"
 
 # All available services
 services:
-
+  
   # Computation
   jupyter:
     container_name: "{{cookiecutter.project_name}}_jupyter"
@@ -15,24 +15,29 @@ services:
     volumes:
       - ./shared/notebooks/:/home/jovyan/work/notebooks
       - ./shared/dags/:/home/jovyan/work/dags
-      - ./services/apistar/api/:/home/jovyan/work/api
-      - ./services/src:/home/jovyan/work/src
+      - ./services/flaskapi/api/:/home/jovyan/work/api
     ports:
       - 8888:8888
     entrypoint: sh -c 'start-notebook.sh --NotebookApp.token=$$JUPYTER_PASSWORD'
 
   # Visualization
-  superset:
-    container_name: "{{cookiecutter.project_name}}_superset"
+  grafana:
+    container_name: "{{cookiecutter.project_name}}_grafana"
     restart: "always"
-    image: tylerfowler/superset:0.28
+    image: grafana/grafana:5.1.0
     depends_on:
-        - postgres
+      - postgres
     env_file:
-        - ./config/superset_container.env
-        - ./config/superset_database.env
+      - ./config/grafana.env
+    volumes:
+      - ./entrypoint.sh:/app/entrypoint.sh
+      - ./config/grafana.ini:/etc/grafana/grafana.ini
+      - ./config/dashboards:/var/lib/grafana/dashboards
+      - ./config/datasources:/etc/grafana/datasources
+      - ./config/plugins:/var/lib/grafana/plugins
+      - grafana-storage:/var/lib/grafana
     ports:
-      - 8088:8088
+      - 3000:3000
 
   # Misc Storage
   postgres:
@@ -41,7 +46,7 @@ services:
     image: postgres
     env_file:
       - ./config/postgres.env
-      - ./config/superset_database.env
+      - ./config/grafana.env
       - ./config/airflow_database.env
       - ./config/shared_database.env
     volumes:
@@ -52,14 +57,14 @@ services:
 
   # Administrate the database 
   pgadmin:
-    container_name: "ds_stack_test_pgadmin"
+    container_name: "{{cookiecutter.project_name}}_pgadmin"
     restart: "always"
     image: dpage/pgadmin4
     depends_on:
         - postgres
     env_file:
       - ./config/postgres.env
-      - ./config/superset_database.env
+      - ./config/grafana.env
       - ./config/airflow_database.env
       - ./config/shared_database.env
       - ./config/pgadmin.env
@@ -72,7 +77,7 @@ services:
   airflow:
     container_name: "{{cookiecutter.project_name}}_airflow"
     restart: "always"
-    image: puckel/docker-airflow:1.10.6-1
+    image: puckel/docker-airflow:1.10.12
     depends_on:
       - postgres
     env_file:
@@ -85,6 +90,20 @@ services:
     ports:
       - 8080:8080
     command: webserver
+
+  # experiment tracking
+  mlflow:
+    container_name: "{{cookiecutter.project_name}}_mlflow"
+    retart: "always"
+    build: services/mlflow
+    env_file:
+      - ./config/mlflow.env
+    expose: 
+      - "5000"
+    ports:
+      - "5000:5000"
+    depends_on: 
+      - postgres
 
   # Model Storage
   minio:
@@ -100,14 +119,14 @@ services:
     command: server /data
 
   # API
-  apistar:
-    container_name: "{{cookiecutter.project_name}}_apistar"
+  flaskapi:
+    container_name: "{{cookiecutter.project_name}}_flaskapi"
     restart: "always"
-    build: services/apistar
+    build: services/flaskapi
     env_file:
       - ./config/minio.env
     volumes:
-      - ./services/apistar/api:/usr/src/app
+      - ./services/flaskapi/api:/usr/src/app
     ports:
       - 8000:8000
     command: gunicorn app:app -b 0.0.0.0:8000
@@ -130,3 +149,5 @@ volumes:
   pgadmin_volume:
   minio_volume:
   portainer_volume:
+  grafana-storage:
+  
