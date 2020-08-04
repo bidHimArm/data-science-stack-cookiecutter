@@ -109,7 +109,6 @@ services:
     container_name: "{{cookiecutter.project_name}}_mlflow"
     retart: "always"
     build: services/mlflow
-    image: mlflow_server
     env_file:
       - ./config/mlflow.env
     ports:
