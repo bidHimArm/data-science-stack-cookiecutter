@@ -111,12 +111,10 @@ services:
     build: services/mlflow
     env_file:
       - ./config/mlflow.env
+      - ./config/minio.env
     ports:
       - "5000:5000"
-    depends_on: 
-      - minio
-      - postgres
-    #command: mlflow server --backend-store-uri postgresql://mlflow:${MLFLOW_PASSWORD}@postgres:5432/mlflow --default-artifact-root s3://mlflow/ --host 0.0.0.0
+    command: mlflow server --backend-store-uri postgresql://mlflow:${MLFLOW_DB_PASSWORD}@postgres:5432/mlflow --default-artifact-root s3://mlflow/artifacts --host 0.0.0.0
     #--default-artifact-root s3://mlflow_bucket/mlflow/ --host 0.0.0.0
 
   # API
