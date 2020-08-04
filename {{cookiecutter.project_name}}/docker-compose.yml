@@ -91,20 +91,6 @@ services:
       - 8080:8080
     command: webserver
 
-  # experiment tracking
-  mlflow:
-    container_name: "{{cookiecutter.project_name}}_mlflow"
-    retart: "always"
-    build: services/mlflow
-    env_file:
-      - ./config/mlflow.env
-    expose: 
-      - "5000"
-    ports:
-      - "5000:5000"
-    depends_on: 
-      - postgres
-
   # Model Storage
   minio:
     container_name: "{{cookiecutter.project_name}}_minio"
@@ -117,6 +103,22 @@ services:
     ports:
         - 9000:9000
     command: server /data
+
+  # experiment tracking
+  mlflow:
+    container_name: "{{cookiecutter.project_name}}_mlflow"
+    retart: "always"
+    build: services/mlflow
+    image: mlflow_server
+    env_file:
+      - ./config/mlflow.env
+    ports:
+      - "5000:5000"
+    depends_on: 
+      - minio
+      - postgres
+    #command: mlflow server --backend-store-uri postgresql://mlflow:${MLFLOW_PASSWORD}@postgres:5432/mlflow --default-artifact-root s3://mlflow/ --host 0.0.0.0
+    #--default-artifact-root s3://mlflow_bucket/mlflow/ --host 0.0.0.0
 
   # API
   flaskapi:
