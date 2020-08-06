@@ -47,7 +47,7 @@ services:
     env_file:
       - ./config/postgres.env
       - ./config/grafana.env
-      - ./config/airflow_db.env
+      - ./config/airflow_database.env
       - ./config/shared_database.env
       - ./config/mlflow.env
     volumes:

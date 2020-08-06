@@ -1,9 +1,9 @@
 FROM python:3.7.0
 USER root
 
-RUN pip install --proxy=${http_proxy}\
-    psycopg2-binary\
-    mlflow\
+RUN pip install --no-cache-dir --proxy=${http_proxy}\
+    psycopg2-binary \
+    mlflow \
     boto3
 
 EXPOSE 5000
