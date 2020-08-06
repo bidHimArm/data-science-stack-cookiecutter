@@ -78,7 +78,7 @@ services:
   airflow:
     container_name: "{{cookiecutter.project_name}}_airflow"
     restart: "always"
-    image: puckel/docker-airflow:1.10.12
+    image: puckel/docker-airflow
     depends_on:
       - postgres
     env_file:
