@@ -46,7 +46,7 @@ services:
     image: postgres
     env_file:
       - ./config/postgres.env
-      - ./config/grafana_db.env
+      - ./config/grafana.env
       - ./config/airflow_db.env
       - ./config/shared_database.env
       - ./config/mlflow.env
