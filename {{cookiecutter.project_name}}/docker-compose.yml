@@ -123,7 +123,7 @@ services:
 
   # API
   flaskapi:
-    container_name: "{{cookiecutter.project_name}}_flaskapi"
+    container_name: "mdds_monitoring_mvp_flaskapi"
     restart: "always"
     build: services/flaskapi
     env_file:
@@ -132,7 +132,6 @@ services:
       - ./services/flaskapi/api:/usr/src/app
     ports:
       - 8000:8000
-    command: gunicorn app:app -b 0.0.0.0:8000
 
   # Admin Overview
   portainer:

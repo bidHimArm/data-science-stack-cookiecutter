@@ -1,8 +1,10 @@
 FROM python:3.7.0
 USER root
 
-RUN pip install mlflow==1.7.2 && \
-    pip install boto3==1.9.240
+RUN pip install --proxy=${http_proxy}\
+    psycopg2-binary\
+    mlflow\
+    boto3
 
 EXPOSE 5000
 
