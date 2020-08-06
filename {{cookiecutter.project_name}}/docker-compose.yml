@@ -115,6 +115,8 @@ services:
     env_file:
       - ./config/mlflow.env
       - ./config/minio.env
+    volumes: 
+      - ./shared/mlflow:/opt/mlflow
     ports:
       - "5000:5000"
 
