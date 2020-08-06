@@ -56,13 +56,13 @@ with high performance requirements. For that:
 # Following is a simple webserver, taken from Flask's documentaion
 
 
-from flask import Flask
-app = Flask(__name__)
+# from flask import Flask
+# app = Flask(__name__)
 
 
-@app.route('/')
-def hello():
-    return 'Hello World!'
+# @app.route('/')
+# def hello():
+#     return 'Hello World!'
 
 ###############################################################################
 # Save the above snippet in a file called ``app.py`` and you can now run a
@@ -84,21 +84,21 @@ def hello():
 # requests:
 
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    return 'Hello World!'
+# @app.route('/predict', methods=['POST'])
+# def predict():
+#     return 'Here is the prediction'
 
 ###############################################################################
 # We will also change the response type, so that it returns a JSON response
 # containing ImageNet class id and name. The updated ``app.py`` file will
 # be now:
 
-from flask import Flask, jsonify
-app = Flask(__name__)
+# from flask import Flask, jsonify
+# app = Flask(__name__)
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    return jsonify({'class_id': 'IMAGE_NET_XXX', 'class_name': 'Cat'})
+# @app.route('/predict', methods=['POST'])
+# def predict():
+#     return jsonify({'class_id': 'IMAGE_NET_XXX', 'class_name': 'Cat'})
 
 
 ######################################################################
@@ -122,20 +122,20 @@ def predict():
 # transform pipeline, which transforms our images as required. You
 # can read more about transforms `here <https://pytorch.org/docs/stable/torchvision/transforms.html>`_.
 
-import io
+# import io
 
-import torchvision.transforms as transforms
-from PIL import Image
+# import torchvision.transforms as transforms
+# from PIL import Image
 
-def transform_image(image_bytes):
-    my_transforms = transforms.Compose([transforms.Resize(255),
-                                        transforms.CenterCrop(224),
-                                        transforms.ToTensor(),
-                                        transforms.Normalize(
-                                            [0.485, 0.456, 0.406],
-                                            [0.229, 0.224, 0.225])])
-    image = Image.open(io.BytesIO(image_bytes))
-    return my_transforms(image).unsqueeze(0)
+# def transform_image(image_bytes):
+#     my_transforms = transforms.Compose([transforms.Resize(255),
+#                                         transforms.CenterCrop(224),
+#                                         transforms.ToTensor(),
+#                                         transforms.Normalize(
+#                                             [0.485, 0.456, 0.406],
+#                                             [0.229, 0.224, 0.225])])
+#     image = Image.open(io.BytesIO(image_bytes))
+#     return my_transforms(image).unsqueeze(0)
 
 
 ######################################################################
@@ -144,10 +144,10 @@ def transform_image(image_bytes):
 # bytes mode (first replacing `../_static/img/sample_file.jpeg` with the actual
 # path to the file on your computer) and see if you get a tensor back:
 
-with open("../_static/img/sample_file.jpeg", 'rb') as f:
-    image_bytes = f.read()
-    tensor = transform_image(image_bytes=image_bytes)
-    print(tensor)
+# with open("../_static/img/sample_file.jpeg", 'rb') as f:
+#     image_bytes = f.read()
+#     tensor = transform_image(image_bytes=image_bytes)
+#     print(tensor)
 
 ######################################################################
 # Prediction
@@ -159,19 +159,19 @@ with open("../_static/img/sample_file.jpeg", 'rb') as f:
 # use this same approach for your own models. See more about loading your
 # models in this :doc:`tutorial </beginner/saving_loading_models>`.
 
-from torchvision import models
+# from torchvision import models
 
 # Make sure to pass `pretrained` as `True` to use the pretrained weights:
-model = models.densenet121(pretrained=True)
+# model = models.densenet121(pretrained=True)
 # Since we are using our model only for inference, switch to `eval` mode:
-model.eval()
+# model.eval()
 
 
-def get_prediction(image_bytes):
-    tensor = transform_image(image_bytes=image_bytes)
-    outputs = model.forward(tensor)
-    _, y_hat = outputs.max(1)
-    return y_hat
+# def get_prediction(image_bytes):
+#     tensor = transform_image(image_bytes=image_bytes)
+#     outputs = model.forward(tensor)
+#     _, y_hat = outputs.max(1)
+#     return y_hat
 
 
 ######################################################################
@@ -185,16 +185,16 @@ def get_prediction(image_bytes):
 # ImageNet class name. We will load this JSON file and get the class name of
 # the predicted index.
 
-import json
+# import json
 
-imagenet_class_index = json.load(open('../_static/imagenet_class_index.json'))
+# imagenet_class_index = json.load(open('../_static/imagenet_class_index.json'))
 
-def get_prediction(image_bytes):
-    tensor = transform_image(image_bytes=image_bytes)
-    outputs = model.forward(tensor)
-    _, y_hat = outputs.max(1)
-    predicted_idx = str(y_hat.item())
-    return imagenet_class_index[predicted_idx]
+# def get_prediction(image_bytes):
+#     tensor = transform_image(image_bytes=image_bytes)
+#     outputs = model.forward(tensor)
+#     _, y_hat = outputs.max(1)
+#     predicted_idx = str(y_hat.item())
+#     return imagenet_class_index[predicted_idx]
 
 
 ######################################################################
@@ -204,14 +204,14 @@ def get_prediction(image_bytes):
 # We will test our above method:
 
 
-with open("../_static/img/sample_file.jpeg", 'rb') as f:
-    image_bytes = f.read()
-    print(get_prediction(image_bytes=image_bytes))
+# with open("../_static/img/sample_file.jpeg", 'rb') as f:
+#     image_bytes = f.read()
+#     print(get_prediction(image_bytes=image_bytes))
 
 ######################################################################
 # You should get a response like this:
 
-['n02124075', 'Egyptian_cat']
+# ['n02124075', 'Egyptian_cat']
 
 ######################################################################
 # The first item in array is ImageNet class id and second item is the human
@@ -258,51 +258,63 @@ with open("../_static/img/sample_file.jpeg", 'rb') as f:
 #
 # .. code-block:: python
 #
-#   import io
-#   import json
-#
-#   from torchvision import models
-#   import torchvision.transforms as transforms
-#   from PIL import Image
-#   from flask import Flask, jsonify, request
-#
-#
-#   app = Flask(__name__)
-#   imagenet_class_index = json.load(open('<PATH/TO/.json/FILE>/imagenet_class_index.json'))
-#   model = models.densenet121(pretrained=True)
-#   model.eval()
-#
-#
-#   def transform_image(image_bytes):
-#       my_transforms = transforms.Compose([transforms.Resize(255),
-#                                           transforms.CenterCrop(224),
-#                                           transforms.ToTensor(),
-#                                           transforms.Normalize(
-#                                               [0.485, 0.456, 0.406],
-#                                               [0.229, 0.224, 0.225])])
-#       image = Image.open(io.BytesIO(image_bytes))
-#       return my_transforms(image).unsqueeze(0)
-#
-#
-#   def get_prediction(image_bytes):
-#       tensor = transform_image(image_bytes=image_bytes)
-#       outputs = model.forward(tensor)
-#       _, y_hat = outputs.max(1)
-#       predicted_idx = str(y_hat.item())
-#       return imagenet_class_index[predicted_idx]
-#
-#
-#   @app.route('/predict', methods=['POST'])
-#   def predict():
-#       if request.method == 'POST':
-#           file = request.files['file']
-#           img_bytes = file.read()
-#           class_id, class_name = get_prediction(image_bytes=img_bytes)
-#           return jsonify({'class_id': class_id, 'class_name': class_name})
-#
-#
-#   if __name__ == '__main__':
-#       app.run()
+import io
+import json
+
+from torchvision import models
+import torchvision.transforms as transforms
+from PIL import Image
+from flask import Flask, jsonify, request, render_template
+
+
+app = Flask(__name__)
+#imagenet_class_index = json.load(open('<PATH/TO/.json/FILE>/imagenet_class_index.json'))
+model = models.densenet121(pretrained=True)
+model.eval()
+
+
+# Create a URL route in our application for "/"
+@app.route('/')
+def home():
+    """
+    This function just responds to the browser ULR
+    localhost:8000/
+    :return:        the rendered template 'index.html'
+    """
+    return render_template('index.html')
+
+
+def transform_image(image_bytes):
+    my_transforms = transforms.Compose([transforms.Resize(255),
+                                        transforms.CenterCrop(224),
+                                        transforms.ToTensor(),
+                                        transforms.Normalize(
+                                            [0.485, 0.456, 0.406],
+                                            [0.229, 0.224, 0.225])])
+    image = Image.open(io.BytesIO(image_bytes))
+    return my_transforms(image).unsqueeze(0)
+
+
+def get_prediction(image_bytes):
+    tensor = transform_image(image_bytes=image_bytes)
+    outputs = model.forward(tensor)
+    _, y_hat = outputs.max(1)
+    predicted_idx = str(y_hat.item())
+    return imagenet_class_index[predicted_idx]
+
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    if request.method == 'POST':
+        file = request.files['file']
+        img_bytes = file.read()
+        class_id, class_name = get_prediction(image_bytes=img_bytes)
+        return jsonify({'class_id': class_id, 'class_name': class_name})
+
+
+# If we're running in stand alone mode, run the application
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000, debug=True)
 
 ######################################################################
 # Let's test our web server! Run:

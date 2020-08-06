@@ -4,7 +4,7 @@ set -e # exit immediately if a command exits with a non-zero status.
 POSTGRES="psql --username postgres"
 
 # create database for superset
-echo "Creating database: superset"
+echo "Creating database: grafana"
 $POSTGRES <<EOSQL
-CREATE DATABASE superset OWNER superset;
+CREATE DATABASE grafana OWNER grafana;
 EOSQL

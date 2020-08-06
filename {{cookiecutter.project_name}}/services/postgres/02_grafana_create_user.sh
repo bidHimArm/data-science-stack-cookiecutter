@@ -4,7 +4,7 @@ set -e # exit if a command exits with a not-zero exit code
 POSTGRES="psql -U postgres"
 
 # create a role for superset
-echo "Creating database role: superset"
+echo "Creating database role: grafana"
 $POSTGRES <<-EOSQL
 CREATE USER superset WITH
     LOGIN
@@ -13,5 +13,5 @@ CREATE USER superset WITH
     NOCREATEROLE
     NOINHERIT
     NOREPLICATION
-    PASSWORD '$SUPERSET_PASSWORD';
+    PASSWORD '$GRAFANA_DB_PASSWORD';
 EOSQL

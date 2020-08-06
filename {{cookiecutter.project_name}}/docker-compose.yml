@@ -28,7 +28,7 @@ services:
     depends_on:
       - postgres
     env_file:
-      - ./config/grafana.env
+      - ./config/grafana_container.env
     volumes:
       - ./entrypoint.sh:/app/entrypoint.sh
       - ./config/grafana.ini:/etc/grafana/grafana.ini
@@ -46,9 +46,10 @@ services:
     image: postgres
     env_file:
       - ./config/postgres.env
-      - ./config/grafana.env
-      - ./config/airflow_database.env
+      - ./config/grafana_db.env
+      - ./config/airflow_db.env
       - ./config/shared_database.env
+      - ./config/mlflow.env
     volumes:
       - postgres_volume:/var/lib/postgresql/data/
       - ./services/postgres/:/docker-entrypoint-initdb.d/
@@ -109,13 +110,13 @@ services:
     container_name: "{{cookiecutter.project_name}}_mlflow"
     retart: "always"
     build: services/mlflow
+    depends_on:
+      - postgres
     env_file:
       - ./config/mlflow.env
       - ./config/minio.env
     ports:
       - "5000:5000"
-    command: mlflow server --backend-store-uri postgresql://mlflow:${MLFLOW_DB_PASSWORD}@postgres:5432/mlflow --default-artifact-root s3://mlflow/artifacts --host 0.0.0.0
-    #--default-artifact-root s3://mlflow_bucket/mlflow/ --host 0.0.0.0
 
   # API
   flaskapi:
