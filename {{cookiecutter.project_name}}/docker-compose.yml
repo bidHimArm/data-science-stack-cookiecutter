@@ -109,14 +109,16 @@ services:
   mlflow:
     container_name: "{{cookiecutter.project_name}}_mlflow"
     retart: "always"
-    build: services/mlflow
+    build: services/mlflow_server
     depends_on:
       - postgres
+    image: mlflow_server
     env_file:
       - ./config/mlflow.env
       - ./config/minio.env
     volumes: 
       - ./shared/mlflow:/opt/mlflow
+      - ./shared/mlflow_tracking:/tracking
     ports:
       - "5000:5000"
 
