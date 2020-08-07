@@ -4,8 +4,8 @@ version: "3"
 services:
   
   # Computation
-  jupyter:
-    container_name: "{{cookiecutter.project_name}}_jupyter"
+  jupyterlab:
+    container_name: "{{cookiecutter.project_name}}_jupyterlab"
     restart: "always"
     build: services/jupyter
     env_file:
@@ -19,7 +19,6 @@ services:
       - ./services/flaskapi/api/:/home/jovyan/work/api
     ports:
       - 8888:8888
-    entrypoint: sh -c 'start-notebook.sh --NotebookApp.token=$$JUPYTER_PASSWORD'
 
   # Visualization
   grafana:
