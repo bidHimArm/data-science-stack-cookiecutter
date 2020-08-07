@@ -12,6 +12,7 @@ services:
       - ./config/jupyter.env
       - ./config/minio.env
       - ./config/shared_database.env
+      - ./config/mlflow.env
     volumes:
       - ./shared/notebooks/:/home/jovyan/work/notebooks
       - ./shared/dags/:/home/jovyan/work/dags
